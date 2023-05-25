@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% load components %}
+
+{% block title %}{{ object.title }}{% endblock title %}
+
+
+{% block content %}
+<section class="p-4">
+  <input type="hidden" id="post-id" value="{{ object.id }}" />
+
+  <article class="blog-post p-5">
+    <h1>{{ object.title }}</h1>
+    <hr />
+    <span class="blog-post-meta text-secondary">
+      <time datetime="{{ post.created|date:'d.m.Y' }}">{{ post.created|date:"d.m.Y" }}</time> 
+      by <address class="author text-secondary d-inline-block m-0">{{ post.author }}</address>
+    </span>
+    <p>{{ object.body|safe }}</p>
+    {% like_btn %}
+  </article>
+
+  {% include 'components/comments.html' %}
+
+  <!-- render last_articles here -->
+  <div class="row p-5">
+    <h1>Останні статті</h1>
+    {% for article in last_articles %}
+    <article class="post-item col-12 col-md-6 p-2">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">{{ article.title }}</h2>
+            <span class="text-secondary">
+              <time datatime="{{ article.created|date:'d.m.Y' }}">{{ article.created|date:"d.m.Y" }}</time> 
+              by <address class="author text-secondary d-inline-block m-0">{{ article.author }}</address>
+            </span>
+            <p class="card-text">{{article.body|safe|truncatewords_html:15 }}</p>
+            {% like_btn %}
+            <a href="{% url 'post_detail' article.slug  %}" class="btn btn-primary">Read More</a>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+
+</section>
+
+{% endblock content%}
